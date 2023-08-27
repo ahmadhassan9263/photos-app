@@ -27,6 +27,7 @@ export default function Home() {
           width="400"
           height="300"
           src={imageId}
+          publicId={result.public_id}
           sizes="100vw"
           alt="Description of my image"
         />
