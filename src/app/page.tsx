@@ -1,23 +1,21 @@
 "use client";
-
 import { CldUploadButton } from "next-cloudinary";
 import { CldImage } from "next-cloudinary";
-import { StaticImageData } from "next/image";
 import { useState } from "react";
 
-export type UploadResult = {
-  info: {
-    public_id: any;
-  };
+export type UploadReslut = {
   event: "success";
+  info: {
+    public_id: string;
+  };
 };
 
 export default function Home() {
-  const [imageId, setImageId] = useState("");
+  const [imageId, setImageId] = useState("cld-sample-2");
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <CldUploadButton
-        onUpload={(result: UploadResult) => {
+        onUpload={(result: UploadReslut) => {
           setImageId(result.info.public_id);
         }}
         uploadPreset="gdezsemo"
@@ -27,7 +25,6 @@ export default function Home() {
           width="400"
           height="300"
           src={imageId}
-          publicId={result.public_id}
           sizes="100vw"
           alt="Description of my image"
         />
