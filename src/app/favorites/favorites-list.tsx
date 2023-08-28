@@ -2,7 +2,7 @@
 
 import { ForceRefresh } from "@/components/force-refresh";
 import cloudinary from "cloudinary";
-import { CloudinaryImage } from "../gallery/lcoudinary-image";
+import { CloudinaryImage } from "../../components/lcoudinary-image";
 import { useEffect, useState } from "react";
 
 type SearchResult = {

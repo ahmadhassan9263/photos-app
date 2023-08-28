@@ -120,7 +120,7 @@ export default function RootLayout({
               height="50"
               alt="icon of this photo album app"
             />
-            Panaverse Photos App
+            WebDevCody Photos
             <div className="ml-auto flex items-center space-x-4">
               <Avatar>
                 <AvatarImage

@@ -1,11 +1,11 @@
-import { CloudinaryImage } from "./lcoudinary-image";
 import UploadButton from "./upload-button";
 import cloudinary from "cloudinary";
-import { ImageGrid } from "@/components/image-grid";
+import GalleryGrid from "./gallery-grid";
+import { SearchForm } from "./search-form";
 
 export type SearchResult = {
   public_id: string;
-  tags: string;
+  tags: string[];
 };
 
 export default async function GalleryPage({
@@ -15,35 +15,24 @@ export default async function GalleryPage({
     search: string;
   };
 }) {
-  const result = (await cloudinary.v2.search
-    .expression("resource_type:image")
-    .sort_by("public_id", "desc")
+  const results = (await cloudinary.v2.search
+    .expression(`resource_type:image${search ? ` AND tags=${search}` : ""}`)
+    .sort_by("created_at", "desc")
+    .with_field("tags")
     .max_results(30)
     .execute()) as { resources: SearchResult[] };
 
   return (
     <section>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-8">
         <div className="flex justify-between">
-          <h1 className="text-4xl font-bold">GALLERY</h1>
+          <h1 className="text-4xl font-bold">Gallery</h1>
           <UploadButton />
         </div>
-        <div>
-          <ImageGrid
-            images={result.resources}
-            getImage={(imageData: SearchResult) => {
-              return (
-                <CloudinaryImage
-                  key={imageData.public_id}
-                  imageData={imageData}
-                  width="400"
-                  height="300"
-                  alt="an image of something"
-                />
-              );
-            }}
-          />
-        </div>
+
+        <SearchForm initialSearch={search} />
+
+        <GalleryGrid images={results.resources} />
       </div>
     </section>
   );
