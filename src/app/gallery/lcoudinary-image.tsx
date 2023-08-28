@@ -1,18 +1,26 @@
 "use client";
 
 import { Heart } from "@/components/icons/heart";
-import { CldImage } from "next-cloudinary";
+import { CldImage, CldImageProps } from "next-cloudinary";
 import { setAsFavoriteAction } from "./actions";
 import { FullHeart } from "@/components/icons/full-heart";
-import { useTransition } from "react";
-import path from "path";
+import { useState, useTransition } from "react";
+import { SearchResult } from "../gallery/page";
+import { ImageMenu } from "@/components/image-menu";
 
-export function CloudinaryImage(props: any & { imageData }) {
+export function CloudinaryImage(
+  props: {
+    imageData: SearchResult;
+    onUnheart?: (unheartedResource: SearchResult) => void;
+    [key: string]: any;
+  } & Omit<CldImageProps, "src">
+) {
   const [transition, startTransition] = useTransition();
-  const imageData = props;
-  console.log(props);
+  const { imageData, onUnheart } = props;
 
-  const isFavorited = imageData.tags.includes("favorite");
+  const [isFavorited, setIsFavorited] = useState(
+    imageData.tags.includes("favorite")
+  );
 
   return (
     <div className="relative">
@@ -20,8 +28,10 @@ export function CloudinaryImage(props: any & { imageData }) {
       isFavorited ? (
       <FullHeart
         onClick={() => {
+          onUnheart?.(imageData);
+          setIsFavorited(false);
           startTransition(() => {
-            setAsFavoriteAction(imageData.public_id, false, props.path);
+            setAsFavoriteAction(imageData.public_id, false);
           });
         }}
         className="absolute top-2 right-2 hover:text-white text-red-500 cursor-pointer"
@@ -29,13 +39,15 @@ export function CloudinaryImage(props: any & { imageData }) {
       ) : (
       <Heart
         onClick={() => {
+          setIsFavorited(true);
           startTransition(() => {
-            setAsFavoriteAction(imageData.public_id, true, props.path);
+            setAsFavoriteAction(imageData.public_id, true);
           });
         }}
         className="absolute top-2 right-2 hover:text-color-500 cursor-pointer"
       />
       )
+      <ImageMenu />
     </div>
   );
 }
